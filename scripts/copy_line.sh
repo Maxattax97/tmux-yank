@@ -77,14 +77,14 @@ end_of_line_in_copy_mode() {
 }
 
 yank_to_clipboard() {
-    tmux send -X save-buffer "${HOME}/.tmux-yank-buffer"
-    cat "${HOME}/.tmux-yank-buffer" | "$(clipboard_copy_command)"
-    #if tmux_is_at_least 2.4; then
+    if tmux_is_at_least 2.4; then
         ## shellcheck disable=SC2119
         #tmux send -X copy-pipe-and-cancel "$(clipboard_copy_command)"
-    #else
-        #tmux send-key "$(yank_wo_newline_key)"
-    #fi
+        tmux save-buffer "/tmp/tmux-yank-buffer"
+        cat "/tmp/tmux-yank-buffer" | "$(clipboard_copy_command)"
+    else
+        tmux send-key "$(yank_wo_newline_key)"
+    fi
 }
 
 go_to_the_end_of_current_line() {
